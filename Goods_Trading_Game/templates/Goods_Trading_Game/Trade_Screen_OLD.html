@@ -1,0 +1,17 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Trade Screen
+{% endblock %}
+
+{% block content %}
+    Production Good: {{player.production_good}} Good<br>
+    This period, you can consume a: {{player.consumable_good}} Good<br>
+    You have a: {{player.held_good}} Good<br>
+    Your partner has a: {{player.others_good}} Good<br>
+    <input type="hidden" name="">
+    {% formfields %}
+    {% next_button %}
+
+{% endblock %}

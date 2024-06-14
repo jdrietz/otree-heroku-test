@@ -1,0 +1,379 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Goods Trading Game: Trade Screen</title>
+</head>
+
+<!-- Style gives ability to encode the Grid layout, and the overhead triplet -->
+<style>
+
+    .u1 { position: absolute; top: 0; left: 0; right:67%; bottom: 90%;
+      border:solid #000; border-width: 0 0 2px 0; text-align: center;}
+    .u2 { position: absolute; top: 0; left: 33%; right:33%; bottom: 90%;
+      border:solid #000; border-width: 0 2px 2px 2px; text-align: center;}
+    .u3 { position: absolute; top: 0; left: 66%; right:0; bottom: 90%;
+      border:solid #000; border-width: 0 0 2px 0; text-align: center;}
+    .tl { position: absolute; top: 10%; left: 0; right: 50%; bottom: 45%;
+      border:solid #000; border-width: 0 2px 2px 0; text-align: center; display: inline-block}
+    .tr_trade { position: absolute; top: 15%; left: 75%; right: 0; bottom: 45%;
+      border:solid #000; border-width: 0 0 2px 1px; text-align: center; padding-left: 50px; padding-right: 50px;}
+    .tr_prod { position: absolute; top: 10%; left: 50%; right: 0; bottom: 85%;
+      border:solid #000; border-width: 0 0 2px 0; text-align: center;}
+    .tr_summ { position: absolute; top: 15%; left: 50%; right: 25%; bottom: 45%;
+      border:solid #000; border-width: 0 1px 2px 0; text-align: center;}
+    .bl { position: absolute; top: 55%; left: 0; right: 50%; bottom: 0;
+      border:solid #000; border-width: 0 2px 0 0; text-align: center;}
+    .br { position: absolute; top: 55%; left: 50%; right: 0; bottom: 0;
+      text-align: center;}
+    th{ border-right: solid 1px #000; border-left: solid 1px #000; }
+    td{ border-right: solid 1px #000; border-left: solid 1px #000; }
+
+    #container {
+        height: 400px;
+    }
+
+    #good-graph {
+        position: relative;
+        width: 400px;
+        height: 300px;
+        margin: 1.1em 0 0;
+        padding: 0;
+        background: transparent;
+        font-size: 11px;
+        display: inline-block;
+    }
+    #good-graph caption {
+      caption-side: top;
+      width: 400px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      top: -40px;
+      position: relative;
+      z-index: 10;
+      font-weight: bold;
+    }
+
+    #good-graph tr, #good-graph th, #good-graph td {
+      position: absolute;
+      bottom: 20px;
+      width: 150px;
+      z-index: 2;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    #good-graph td {
+      transition: all .3s ease;
+
+      &:hover {
+        background-color: desaturate(#85144b, 100);
+        opacity: .9;
+        color: white;
+      }
+    }
+    #good-graph thead tr {
+      left: 100%;
+      top: 50%;
+      bottom: auto;
+      margin: -2.5em 0 0 5em;}
+    #good-graph thead th {
+      width: 7.5em;
+      height: auto;
+      padding: 0.5em 1em;
+
+    }
+    #good-graph tbody tr {
+      height: 296px;
+      padding-top: 2px;
+      color: #AAA;
+    }
+    #good-graph tbody th {bottom: -1.75em; vertical-align: top;
+        font-weight: normal; color: #333;}
+
+    #good-graph .bar_red {
+        width: 133px;
+        border: 1px solid;
+        border-bottom: none;
+
+        background-color: #f00;
+        border-color: transparent;
+    }
+    #good-graph .bar_blue {
+        width: 120px;
+        border: 1px solid;
+        border-bottom: none;
+        left: 148px;
+        background-color: #00f;
+        border-color: transparent;
+    }
+
+    #good-graph .bar_green {
+        width: 133px;
+        border: 1px solid;
+        border-bottom: none;
+        left: 283px;
+        background-color: #0f0;
+        border-color: transparent;
+    }
+    #good-graph #red{ left: 0; }
+    #good-graph #blue{ left: 133px; }
+    #good-graph #green{ left: 266px; }
+
+    #good-graph2 {
+        position: relative;
+        width: 400px;
+        height: 300px;
+        margin: 1.1em 1em 0;
+        padding: 0;
+        background: transparent;
+        font-size: 11px;
+        display: inline-block;
+        left: 10px;
+    }
+    #good-graph2 caption {
+      caption-side: top;
+      width: 400px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      top: -40px;
+      position: relative;
+      z-index: 10;
+      font-weight: bold;
+    }
+
+    #good-graph2 tr, #good-graph2 th, #good-graph2 td {
+      position: absolute;
+      bottom: 20px;
+      width: 150px;
+      z-index: 2;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    #good-graph2 td {
+      transition: all .3s ease;
+
+      &:hover {
+        background-color: desaturate(#85144b, 100);
+        opacity: .9;
+        color: white;
+      }
+    }
+
+    #good-graph2 thead tr {
+      left: 100%;
+      top: 50%;
+      bottom: auto;
+      margin: -2.5em 0 0 5em;}
+    #good-graph2 thead th {
+      width: 7.5em;
+      height: auto;
+      padding: 0.5em 1em;
+    }
+    #good-graph2 tbody tr {
+      height: 296px;
+      padding-top: 2px;
+      color: #AAA;
+    }
+    #good-graph2 tbody th {bottom: -1.75em; vertical-align: top;
+        font-weight: normal; color: #333;}
+
+    #good-graph2 .bar_red {
+        width: 133px;
+        border: 1px solid;
+        border-bottom: none;
+
+        background-color: #f00;
+        border-color: transparent;
+    }
+    #good-graph2 .bar_blue {
+        width: 120px;
+        border: 1px solid;
+        border-bottom: none;
+        left: 148px;
+        background-color: #00f;
+        border-color: transparent;
+    }
+
+    #good-graph2 .bar_green {
+        width: 133px;
+        border: 1px solid;
+        border-bottom: none;
+        left: 283px;
+        background-color: #0f0;
+        border-color: transparent;
+    }
+    #good-graph2 #red2{ left: 0; }
+    #good-graph2 #blue2{ left: 133px; }
+    #good-graph2 #green2{ left: 266px; }
+
+</style>
+{% block content %}
+<body>
+    <div class="u1"> <b>This is period:</b>  {{player.round_number}}</div>
+    <div class="u2"> <b>Your point total this sequence:</b> {{participant.payoff}} </div>
+    <div class="u3"> <b>Your point total this session:</b> {{participant.payoff}} </div>
+    <div class="tl" id="tl"> <!--Bar Graphs-->
+        <div style="display:inline-block; padding: 50px 0">
+            <!--<img src="{{static 'Goods_Trading_Game/imgs/chart_goods_produced.png'}}" style="max-width: 40%;height: auto"> -->
+            <!--<img src="{{static 'Goods_Trading_Game/imgs/chart_goods_consumable.png'}}" style="max-width: 40%;height: auto"> -->
+            <table id="good-graph">
+                <caption>Number of Producers of Each Type of Good</caption>
+                <thead>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <th scope="row" id="red">Red</th>
+                        <td class="bar_red" height="{{red_prod_height}}px"><p>{{num_red_prod}}</p></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="blue">Blue</th>
+                        <td class="bar_blue" height="{{blue_prod_height}}px"><p>{{num_blue_prod}}</p></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="green">Green</th>
+                        <td class="bar_green" height="{{green_prod_height}}px"><p>{{num_green_prod}}</p></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table id="good-graph2">
+                <caption>Probability you can Consume a Red, Blue, or Green Good in Any Given Period</caption>
+                <thead>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row" id="red2">Red</th>
+                        <td class="bar_red" height="{{red_perc}}%"><p>{{red_perc}}%</p></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="blue2">Blue</th>
+                        <td class="bar_blue" height="{{blue_perc}}%"><p>{{blue_perc}}%</p></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="green2">Green</th>
+                        <td class="bar_green" height="{{green_perc}}%"><p>{{green_perc}}%</p></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="tr_prod"> <b>This Sequence You Produce:</b> {{player.production_good}} Goods.</div>
+    <div class="tr_trade">
+        {{ if player_can_consume }}
+        You are able to consume your held good! Congratulations!
+        <input type="radio" id="No_cons" name="trade_choice" value="False" style="display: none" checked="checked"><label></label>
+        {{ formfield_errors 'trade_choice' }}
+        {{endif}}
+        {{if not player_can_consume}}
+        Would you like to trade your {{player.held_good}} Good for your partner's {{player.others_good}} Good?<br><br>
+        If you successfully trade, you will carry this good into the next period if the sequence continues.<br><br>
+        <!-- Using the {%formfields%} hides the clickable options behind the div's background... Using custom radio buttons instead.-->
+        <input type="radio" id="Yes" name="trade_choice" value="True"><label> Yes </label>
+        <input type="radio" id="No" name="trade_choice" value="False"><label> No </label>
+        {{endif}}
+        <br>
+        Click "OK" to continue.<br>
+        <button class="otree-btn-next btn btn-primary">   OK   </button>
+
+    </div>
+
+
+    <div class="tr_summ"><b>You have a: </b> {{player.held_good}} Good<br>
+        <b>This period, you can consume a: </b> {{player.consumable_good}} Good<br>
+        <b>Your trading partner has a: </b> {{player.others_good}} Good
+    </div>
+
+
+
+    <div class="bl"> <b>Your Trading Activity This Session:</b>
+        <!--Create table with trading activity-->
+        <table id="history" class="table">
+            <tr>
+                <th>Period:</th>
+                <th>Good You Held:</th>
+                <th>Good You Could Consume:</th>
+                <th>Partner's Good:</th>
+                <th>Good Partner Could Consume:</th>
+                <th>You Offered to Trade?:</th>
+                <th>Partner Offered to Trade?:</th>
+                <th>Your Partner Consumed Their Own Good?:</th>
+                <th>Points You Earned:</th>
+            </tr>
+            {{ for pl in player_stats }}
+                <tr>
+                    <td>{{pl.round_number}}</td>
+                    <td>{{pl.held_good}}</td>
+                    <td>{{pl.consumable_good}}</td>
+                    <td>{{pl.others_good}}</td>
+                    <td>{{pl.others_consumable}}</td>
+                    <td>{{pl.trade_choice}}</td>
+                    <td>{{pl.other_offered_trade}}</td>
+                    <td>{{pl.other_consumed_good}}</td>
+                    <td>{{pl.consumed}}</td>
+                </tr>
+            {{ endfor }}
+        </table>
+    </div>
+
+
+
+    <div class="br">
+        {{if showtable}}
+        <b>Summary Statistics:</b>
+        <table id="statistics" class="table">
+            <tr>
+                <th></th>
+                <th># of Offers</th>
+                <th># of Offers Accepted</th>
+                <th>Acceptance Rate</th>
+            </tr>
+            <tr>
+                <td><span style="color: red">Red</span> for <span style="color: blue">Blue</span></td>
+                <td>{{trade_rb}}</td>
+                <td>{{acc_rb}}</td>
+                <td>{{rate_rb}}%</td>
+            </tr>
+            <tr>
+                <td><span style="color: red">Red</span> for <span style="color: green">Green</span></td>
+                <td>{{trade_rg}}</td>
+                <td>{{acc_rg}}</td>
+                <td>{{rate_rg}}%</td>
+            </tr>
+            <tr>
+                <td><span style="color: blue">Blue</span> for <span style="color: red">Red</span></td>
+                <td>{{trade_br}}</td>
+                <td>{{acc_br}}</td>
+                <td>{{rate_br}}%</td>
+            </tr>
+            <tr>
+                <td><span style="color: blue">Blue</span> for <span style="color: green">Green</span></td>
+                <td>{{trade_bg}}</td>
+                <td>{{acc_bg}}</td>
+                <td>{{rate_bg}}%</td>
+            </tr>
+            <tr>
+                <td><span style="color: green">Green</span> for <span style="color: red">Red</span></td>
+                <td>{{trade_gr}}</td>
+                <td>{{acc_gr}}</td>
+                <td>{{rate_gr}}%</td>
+            </tr>
+            <tr>
+                <td><span style="color: green">Green</span> for <span style="color: blue">Blue</span></td>
+                <td>{{trade_gb}}</td>
+                <td>{{acc_gb}}</td>
+                <td>{{rate_gb}}%</td>
+            </tr>
+        </table>
+        {{endif}}
+    </div>
+
+{% endblock %}
+</body>
+</html>

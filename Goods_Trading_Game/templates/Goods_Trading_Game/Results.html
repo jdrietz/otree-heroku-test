@@ -1,0 +1,18 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Trade Results
+{% endblock %}
+
+{% block content %}
+    Production Good: {{player.production_good}}<br>
+    Consumable Good: {{player.consumable_good}}<br>
+    Held Good: {{player.held_good}}<br>
+    Tried to Trade?: {{player.trade_choice}}<br>
+    Trade Success: {{player.trade_success}}<br>
+    <!-- Use a timer to load next page... hide the next button -->
+    <!-- {% next_button %} -->
+{% endblock %}
+
+
