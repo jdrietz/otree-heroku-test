@@ -1,6 +1,7 @@
 {% extends "global/Page.html" %}
 {% load otree static %}
 
+{% block content %}
 <!-- Style gives ability to encode the Grid layout, and the overhead triplet -->
 <style>
 
@@ -207,7 +208,7 @@
     #good-graph2 #green2{ left: 266px; }
 
 </style>
-{% block content %}
+
 <body>
     <div class="u1"> <b>This is period:</b>  {{player.round_number}}</div>
     <div class="u2"> <b>Your point total this sequence:</b> {{participant.payoff}} </div>
